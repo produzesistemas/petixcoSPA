@@ -1,0 +1,41 @@
+
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Informe o cep</h5>
+            <form [formGroup]='form' class="form-signin">
+              <div class="form-group">
+                <input type="text" formControlName="cep" placeholder="Informe o cep..." class="form-control" mask="00000-000" required autofocus>
+              </div>
+              <div *ngIf="submitted && f.cep.errors"> 
+                  <p *ngIf="f.cep.errors.required" class="text-danger small">* Informe o CEP para efetuar a busca</p>
+                </div>
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" (click)="onSubmit()">Buscar</button>
+             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div *ngIf="isSearch()">
+<div class="container">
+  <div class="card-deck mb-3 text-center">
+    <div *ngFor="let store of stores" (click)="RowSelected($event, store)">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <img class="img-thumbnail" src={{getImage(store.nomeImagem)}} alt="Pet-shop encontrado">
+        </div>
+        <div class="card-header">
+            {{ store.nome }}
+            <div class="card-title pricing-card-title">
+                {{ store.valorMinimoProduto | currency:'R$'}}
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

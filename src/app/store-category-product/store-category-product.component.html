@@ -1,0 +1,63 @@
+<div class="container">
+
+  <img class="img-thumbnail" src={{getImageStore(productDTO.store.nomeImagem)}} alt="Pet-shop">
+
+
+  <button type="button" class="btn btn-primary" (click)="openShoppingCart()">
+    <i class="fa fa-shopping-cart"></i>
+    <span class="badge badge-light">{{getQuantityItems()}}</span>
+  </button>
+</div>
+
+
+
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <button class="navbar-toggler" type="button" aria-controls="navbarContent" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse" id="navbarContent">
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown" ngbDropdown *ngFor="let categoria of productDTO.categorias">
+        <a class="nav-link dropdown-toggle" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+          {{ categoria.descricao }}
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu" *ngFor="let subcategoria of categoria.subcategorias">
+          <button ngbDropdownItem *ngFor="let subcategoria of categoria.subcategorias" class="dropdown-item" (click)="filterSubCategory(subcategoria)">
+            {{ subcategoria.descricao }}
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container">
+  <h3>Ofertas e destaques</h3>
+  <div class="card-deck mb-3 text-center">
+    <div *ngFor="let produto of products">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <img class="img-thumbnail" src={{getImage(produto.nomeImagem)}} alt="Pet-shop encontrado">
+        </div>
+        <div class="card-header">
+          {{ produto.descricao }}
+          <div class="card-title pricing-card-title">
+            {{ produto.valor | currency:'R$'}}
+          </div>
+          <button class="btn btn-lg btn-primary btn-block text-uppercase" (click)="addShoppingCart(produto)">Comprar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer class="bd-footer text-muted">
+  <div class="container-fluid p-3 p-md-5">
+    <ul class="bd-footer-links">
+      <li>About</li>
+    </ul>
+  </div>
+</footer>

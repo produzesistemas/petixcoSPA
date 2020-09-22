@@ -1,0 +1,105 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-center">Selecione o tipo de pedido</h5>
+                            <hr>
+                            <div *ngFor="let lojatipopedido of productDTO.store.lojatipopedido">
+                                <div class="form-group form-check">
+                                    <input type="radio" value="{{ lojatipopedido.tipoPedido.id }}"
+                                        name="tipoPedidoId" formControlName="tipoPedidoId">
+                                    <label class="form-check-label">{{ lojatipopedido.tipoPedido.descricao }}</label>
+                                </div>
+                            </div>
+                            <div *ngIf="isSubmitted && f.tipoPedidoId.errors">
+                                <p *ngIf="f.tipoPedidoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-center">Selecione a forma de pagamento</h5>
+                            <hr>
+                            <div *ngFor="let lojaformapagamento of productDTO.store.lojaformapagamento">
+                                <div class="form-group form-check">
+                                    <input type="radio" value="{{ lojaformapagamento.formaPagamento.id }}"
+                                        name="formaPagamentoId" formControlName="formaPagamentoId">
+                                    <label class="form-check-label">{{ lojaformapagamento.formaPagamento.descricao }}</label>
+                                </div>
+                            </div>
+                            <div *ngIf="isSubmitted && f.formaPagamentoId.errors">
+                                <p *ngIf="f.formaPagamentoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-4">
+
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-center">Previsão de entrega</h5>
+                            <hr>
+                            <div>
+                                    <p>{{getDeliveryForecast() | date:'EEEE'}}</p>
+                                    <p>{{getDeliveryForecast() | date}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-center">Endereço de entrega</h5>
+                            <hr>
+                            <div>
+                                {{ address.descricao }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-center">Observações</h5>
+                            <hr>
+                            <div>
+                                <input type="text" formControlName="obs" placeholder="Informe alguma informação se necessário..." class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="col-auto mx-auto">
+                <button type="submit" class="btn btn-lg btn-primary btn-block text-uppercase" >
+                    <i class="fa fa-check"></i> Finalizar compra
+                </button>
+            </div>
+        </div>
+
+</form>
