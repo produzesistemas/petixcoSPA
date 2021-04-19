@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="py-5">
+        <form [formGroup]="formAdd">
+            <div class="form-group col-md-6">
+                <h5>Cadastro de Horário de funcionamento</h5>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Dia da semana:</label>
+                <select class="form-control" formControlName="dia">
+                    <option  [value]="dia.dia" *ngFor="let dia of daysWeek">{{dia.name}}</option>
+                </select>
+                <div *ngIf="submitted && q.dia.errors">
+                    <p *ngIf="q.dia.errors.required" class="text-danger small">Selecione o dia da semana</p>
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>Hora inicial:</label>
+                <input type="time" formControlName="horaInicial" placeholder="Informe o email..." class="form-control" required
+                autofocus>
+                <div *ngIf="submitted && q.horaInicial.errors">
+                    <p *ngIf="q.horaInicial.errors.required" class="text-danger small">Informe a hora inicial</p>
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>Hora final:</label>
+                <input type="time" formControlName="horaFinal" placeholder="Informe o email..." class="form-control" required
+                autofocus>
+                <div *ngIf="submitted && q.horaFinal.errors">
+                    <p *ngIf="q.horaFinal.errors.required" class="text-danger small">Informe a hora final</p>
+                </div>
+            </div>
+
+
+
+            <div class="form-group col-md-6">
+                <button type="button" class="btn btn-success text-uppercase" (click)="onSave()">
+                    <i class="fa fa-save"></i> Salvar
+                </button>
+                <button type="button" class="btn btn-danger ml-2 text-uppercase" (click)="onCancel()">
+                    <i class="fa fa-arrow-circle-left"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,105 +1,286 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="container">
+<nav class="navbar navbar-expand-lg navbar-success bg-success text-white text-center">
+    <div class="form-inline">
+        <i class="fas fa-shield-alt"></i>
+        <h6 class="ml-2">Compra segura</h6>
+    </div>
+</nav>
+
+<form [formGroup]="form">
+    <div class="container py-5">
+        <div class="text-center">
+            <img class="img-responsive" src={{getImageStore(cep.loja.nomeImagem)}}>
+        </div>
+
+        <h5 class="text-center py-5">Finalizando o pedido</h5>
         <div class="row">
-            <div class="col-4">
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="text-center">Selecione o tipo de pedido</h5>
-                            <hr>
-                            <div *ngFor="let lojatipopedido of productDTO.store.lojatipopedido">
-                                <div class="form-group form-check">
-                                    <input type="radio" value="{{ lojatipopedido.tipoPedido.id }}"
-                                        name="tipoPedidoId" formControlName="tipoPedidoId">
-                                    <label class="form-check-label">{{ lojatipopedido.tipoPedido.descricao }}</label>
-                                </div>
+            <div class="col">
+                <div class="card">
+                    <h6 class="card-header">Endereço de entrega</h6>
+                    <div class="card-body">
+                        <form [formGroup]='formAdress' class="form-signin">
+                            <div class="form-group">
+                                <input type="text" formControlName="descricao" placeholder="Informe o endereço..."
+                                    class="form-control fix-rounded-right" required autofocus>
                             </div>
-                            <div *ngIf="isSubmitted && f.tipoPedidoId.errors">
-                                <p *ngIf="f.tipoPedidoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                            <div *ngIf="isSubmitted && f.descricao.errors">
+                                <p *ngIf="f.descricao.errors.required" class="text-danger small">* Informe o
+                                    endereço de entrega</p>
                             </div>
-
-                        </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="numero" placeholder="Informe o número..."
+                                    class="form-control">
+                            </div>
+                            <div *ngIf="isSubmitted && f.numero.errors">
+                                <p class="text-danger small" *ngIf="f.numero.errors.required">* Informe o número</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="bairro" placeholder="Informe o bairro..."
+                                    class="form-control">
+                            </div>
+                            <div *ngIf="isSubmitted && f.bairro.errors">
+                                <p *ngIf="f.bairro.errors.required" class="text-danger small">* Informe o bairro</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="complemento" placeholder="Informe o complemento..."
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="pontoReferencia"
+                                    placeholder="Informe o ponto de referência..." class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="cep" placeholder="Informe o CEP..." mask="00000-000"
+                                    class="form-control">
+                            </div>
+                            <div *ngIf="isSubmitted && f.cep.errors">
+                                <p *ngIf="f.cep.errors.required" class="text-danger small">* Informe o CEP</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" formControlName="nomeCidade" placeholder="Informe a cidade..."
+                                    class="form-control">
+                            </div>
+                            <div *ngIf="isSubmitted && f.nomeCidade.errors">
+                                <p *ngIf="f.nomeCidade.errors.required" class="text-danger small">* Informe a cidade
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" maxlength="2" formControlName="uf" placeholder="Informe o estado..."
+                                    class="form-control">
+                            </div>
+                            <div *ngIf="isSubmitted && f.uf.errors">
+                                <p *ngIf="f.uf.errors.required" class="text-danger small">* Informe o estado</p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
 
-                <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h6 class="card-header">Previsão de entrega</h6>
+                    <div class="card-body">
+
+                        <div>
+                            <p>{{getDeliveryForecast() | date:'EEEE'}}</p>
+                            <p>{{getDeliveryForecast() | date}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="py-3">
                     <div class="card">
+                        <h6 class="card-header">Resumo do Pedido</h6>
                         <div class="card-body">
-                            <h5 class="text-center">Selecione a forma de pagamento</h5>
-                            <hr>
-                            <div *ngFor="let lojaformapagamento of productDTO.store.lojaformapagamento">
-                                <div class="form-group form-check">
-                                    <input type="radio" value="{{ lojaformapagamento.formaPagamento.id }}"
-                                        name="formaPagamentoId" formControlName="formaPagamentoId">
-                                    <label class="form-check-label">{{ lojaformapagamento.formaPagamento.descricao }}</label>
+                            <div class="row">
+                                <div class="col">
+                                    <h6 class="card-title">Taxa de entrega:</h6>
+                                    {{getTax() | currency:'R$'}}
                                 </div>
-                            </div>
-                            <div *ngIf="isSubmitted && f.formaPagamentoId.errors">
-                                <p *ngIf="f.formaPagamentoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                                <div class="col">
+                                    <h6 class="card-title">Valor total carrinho: </h6>
+                                    {{getTotalItems() | currency:'R$'}}
+                                </div>
+                                <div class="col">
+                                    <form [formGroup]='form'>
+                                        <h6 class="card-title">Valor total pedido:</h6>
+                                        {{getTotalItems() + getTax() | currency:'R$'}}
+                                        <!-- <div *ngIf="submitted && form.controls.valueMinimum.errors">
+                                            <p class="text-left text-danger small">* Valor minimo para compra é de
+                                                {{ cep.loja.valorMinimoProduto | currency:'R$'}}</p>
+                                        </div> -->
+                                    </form>
+
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
 
-            </div>
-            <div class="col-4">
 
-                <div class="row">
+                <div class="py-3">
                     <div class="card">
+                        <h6 class="card-header">Selecione a Forma de Pagamento</h6>
                         <div class="card-body">
-                            <h5 class="text-center">Previsão de entrega</h5>
-                            <hr>
+                            <div class="row">
+                                <div *ngFor="let formapagamento of formasPagamento">
+                                    <div class="form-group form-check">
+                                        <input type="radio" value="{{ formapagamento.id }}"
+                                            name="formaPagamentoId" formControlName="formaPagamentoId">
+                                        <label class="form-check-label ml-2">{{ formapagamento.descricao }}</label>
+                                    </div>
+                                </div>
+
+
+                            </div>
                             <div>
-                                    <p>{{getDeliveryForecast() | date:'EEEE'}}</p>
-                                    <p>{{getDeliveryForecast() | date}}</p>
+                                <div *ngIf="isSubmitted && fm.formaPagamentoId.errors">
+                                    <p *ngIf="fm.formaPagamentoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                
 
             </div>
         </div>
+        
+        <!-- <div class="row">
+            <div class="py-3">
+                <div class="col-lg-12">
+                    <h6>Selecione a Forma de Pagamento</h6>
+                    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+                        <li ngbNavItem>
+                            <a ngbNavLink (click)="selectTab(0)"><i class="far fa-credit-card"></i> Cartão de crédito</a>
+                            <ng-template ngbNavContent>
+                                <form [formGroup]='formCard' class="form-signin">
+
+                                    <div class="form-group col-md-12">
+                                        <label>Número do cartão:</label>
+                                        <input type="text" formControlName="cardNumber"
+                                            placeholder="Informe o número do cartão ..." class="form-control" required>
+                                    </div>
+                                    <div *ngIf="isSubmitted && f.cardNumber.errors">
+                                        <p *ngIf="f.cardNumber.errors.required" class="text-danger small">* Número do
+                                            cartão é obrigatório</p>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Data da expiração:</label>
+                                        <input type="text" formControlName="expirationDate"
+                                            placeholder="Informe a data de expiração ..." class="form-control" required>
+                                    </div>
+                                    <div *ngIf="isSubmitted && f.expirationDate.errors">
+                                        <p *ngIf="f.expirationDate.errors.required" class="text-danger small">* Data de
+                                            expiração é obrigatória</p>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Nome do titular:</label>
+                                        <input type="text" formControlName="holder"
+                                            placeholder="Informe o nome do titular ..." class="form-control" required>
+                                    </div>
+                                    <div *ngIf="isSubmitted && f.holder.errors">
+                                        <p *ngIf="f.holder.errors.required" class="text-danger small">* Nome do titular
+                                            é obrigatório</p>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>Código de segurança:</label>
+                                        <input type="text" formControlName="securityCode"
+                                            placeholder="Informe o código de segurança ..." class="form-control"
+                                            required>
+                                    </div>
+                                    <div *ngIf="isSubmitted && f.securityCode.errors">
+                                        <p *ngIf="f.securityCode.errors.required" class="text-danger small">* Código de
+                                            segurança é obrigatório</p>
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem>
+                            <a ngbNavLink (click)="selectTab(1)"><i class="fas fa-barcode"></i> Boleto bancário</a>
+                            <ng-template ngbNavContent>
+                                <div class="py-3">
+                                    <i class="fas fa-print"></i> Você poderá visualizar ou imprimir o boleto na sua
+                                    caixa de email após a finalização do pedido. A data de vencimento é de 2 dias
+                                    corridos após a conclusão do pedido. Após esta data, ele perderá a validade.
+                                </div>
+
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav"></div>
+                
+                    <div *ngFor="let formapagamento of formasPagamento">
+                        <div class="form-group form-check">
+                            <input type="radio" value="{{ formapagamento.id }}"
+                                name="formaPagamentoId" formControlName="formaPagamentoId">
+                            <label class="form-check-label">{{ formapagamento.descricao }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="isSubmitted && f.formaPagamentoId.errors">
+                        <p *ngIf="f.formaPagamentoId.errors.required" class="text-danger small">* Campo obrigatório</p>
+                    </div>
+                
+                </div>
+            </div>
+        </div> -->
+
+
+
+        <div class="py-3">
+            <div class="form-group col-md-12">
+                <h5>Observações</h5>
+                <hr>
+                <div>
+                    <input type="text" formControlName="obs"
+                        placeholder="Informe alguma informação se necessário..." class="form-control">
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="text-center">Endereço de entrega</h5>
-                            <hr>
-                            <div>
-                                {{ address.descricao }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="text-center">Observações</h5>
-                            <hr>
-                            <div>
-                                <input type="text" formControlName="obs" placeholder="Informe alguma informação se necessário..." class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
-            <div class="col-auto mx-auto">
-                <button type="submit" class="btn btn-lg btn-primary btn-block text-uppercase" >
-                    <i class="fa fa-check"></i> Finalizar compra
-                </button>
+        <div class="col-auto mx-auto py-3">
+            <button type="button" class="btn btn-outline-danger btn-block text-uppercase" (click)="onSubmit()">
+                <i class="fa fa-check"></i> Finalizar pedido
+            </button>
+        </div>
+        
+    </div>
+
+</form>
+
+<ng-template #modalPedido>
+    <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <h3 class="modal-title">Pedido</h3>
+            <button type="button" class="close" (click)="payLater()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    Pedido enviado com sucesso.
+                </div>
             </div>
         </div>
 
-</form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger text-uppercase" (click)="payNow()">
+                <i class="fa fa-check"></i> Pagar agora
+            </button>
+
+            <button type="button" class="btn btn-rounded btn-default text-uppercase" (click)="payLater()">
+                <i class="fa fa-times"></i> Pagar depois
+            </button>
+        </div>
+
+    </div>
+</ng-template>

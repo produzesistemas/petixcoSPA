@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../_services/authentication.service';
-import { EnderecoService } from '../_services/endereco.service';
+import { AuthenticationSocialLoginService } from '../_services/authentication-social-login.service';
+import { ApplicationUser } from '../_model/application-user';
+import { SocialAuthService } from 'angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 
 @Component({
     selector: 'app-login',
@@ -12,28 +13,25 @@ import { EnderecoService } from '../_services/endereco.service';
 })
 
 export class LoginComponent implements OnInit {
-
     form: FormGroup;
     public submitted = false;
     public parent;
-
-    constructor( private toastr: ToastrService,
-                 private enderecoService: EnderecoService,
-                 private authenticationService: AuthenticationService,
-                 private spinner: NgxSpinnerService,
-                 private router: Router,
-                 private route: ActivatedRoute,
-                 private formBuilder: FormBuilder) {
+    constructor(
+        private router: Router,
+        private authenticationService: AuthenticationService,
+        private authenticationSocialLoginService: AuthenticationSocialLoginService,
+        private route: ActivatedRoute,
+        private formBuilder: FormBuilder,
+        private authService: SocialAuthService) {
     }
 
     ngOnInit() {
-
+        // if (this.authenticationService.getCurrentUser()) {
+        //     this.router.navigate(['partnerArea']);
+        // }
         this.route.params.subscribe(params => {
-            if (params.id === '1') {
-                this.parent = 1;
-            }
+            this.parent = params.id;
         });
-
         this.form = this.formBuilder.group({
             email: ['', Validators.required],
             secret: ['', Validators.required]
@@ -48,25 +46,36 @@ export class LoginComponent implements OnInit {
             return;
         }
         const formControls = this.form.controls;
-        this.spinner.show();
-        this.authenticationService.login(formControls.email.value, formControls.secret.value, 'Cliente')
-        .subscribe(result => {
-        this.spinner.hide();
-        if (this.parent === 1) {
-            if (this.enderecoService.load() === null) {
-                return this.router.navigate(['/address/1']);
-            }
-            return this.router.navigate(['/checkout']);
-        }
+    }
 
-
-
-        }, (error: any) => {
-            this.spinner.hide();
-            return this.toastr.error(error.error.error_description);
+    signInWithGoogle(): void {
+        this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialuser => {
+            this.authenticationSocialLoginService.clearUser();
+            this.authenticationSocialLoginService.addCurrenUser(socialuser);
+            const user = new ApplicationUser();
+            user.email = socialuser.email;
+            user.emailConfirmed = true;
+            user.phoneNumberConfirmed = false;
+            user.userName = socialuser.firstName;
+            user.provider = 'GOOGLE';
+            user.providerId = socialuser.id;
+            this.authenticationService.registerClient(user)
+                        .subscribe(
+                            result => {
+                                this.authenticationService.clearUser();
+                                this.authenticationService.addCurrenUser(result);
+                                if (this.parent === '1') {
+                                    return this.router.navigate(['checkout']);
+                                }
+                                if (this.parent === '0') {
+                                    return this.router.navigate(['storecategoryproduct']);
+                                }
+                                // if (this.parent === '2') {
+                                //         return this.router.navigate(['searchstore']);
+                                // }
+                            }
+                        );
         });
-  }
-
-
+    }
 }
 

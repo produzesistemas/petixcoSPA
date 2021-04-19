@@ -1,0 +1,60 @@
+<div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <h3 class="modal-title">Pagamento do pedido nº {{ pedido.id }}</h3>
+    <button type="button" class="close" (click)="close()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]='form' class="form-signin">
+      <div class="form-group col-md-12">
+        <label>Número do cartão:</label>
+        <input type="text" formControlName="cardNumber" placeholder="Informe o número do cartão ..."
+          class="form-control" required>
+      </div>
+      <div *ngIf="isSubmitted && f.cardNumber.errors">
+        <p *ngIf="f.cardNumber.errors.required" class="text-danger small">* Número do cartão é obrigatório</p>
+      </div>
+      <div class="form-group col-md-12">
+        <label>Data da expiração:</label>
+        <input type="text" formControlName="expirationDate" placeholder="Informe a data de expiração ..."
+          class="form-control" required>
+      </div>
+      <div *ngIf="isSubmitted && f.expirationDate.errors">
+        <p *ngIf="f.expirationDate.errors.required" class="text-danger small">* Data de expiração é obrigatória</p>
+      </div>
+      <div class="form-group col-md-12">
+        <label>Nome do titular:</label>
+        <input type="text" formControlName="holder" placeholder="Informe o nome do titular ..."
+          class="form-control" required>
+      </div>
+      <div *ngIf="isSubmitted && f.holder.errors">
+        <p *ngIf="f.holder.errors.required" class="text-danger small">* Nome do titular é obrigatório</p>
+      </div>
+      <div class="form-group col-md-12">
+        <label>Código de segurança:</label>
+        <input type="text" formControlName="securityCode" placeholder="Informe o código de segurança ..."
+          class="form-control" required>
+      </div>
+      <div *ngIf="isSubmitted && f.securityCode.errors">
+        <p *ngIf="f.securityCode.errors.required" class="text-danger small">* Código de segurança é obrigatório</p>
+      </div>
+      <div class="form-group col-md-12">
+        <h5>Total a pagar:</h5>
+                    {{getTotalPedido() + pedido.valorTaxa | currency:'R$'}}
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger text-uppercase" (click)="onConfirm()">
+        <i class="fa fa-check"></i> Confirmar
+      </button>
+
+      <button type="button" class="btn btn-rounded btn-default text-uppercase" (click)="close()">
+        <i class="fa fa-times"></i> Cancelar
+      </button> 
+  </div>
+
+</div>

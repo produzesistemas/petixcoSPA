@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { ProductService} from '../_services/product.service';
-import { StoreService } from '../_services/store.service';
+import { CarrinhoComprasService} from '../_services/carrinho-compras.service';
+import { LojaService } from '../_services/loja.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { EnderecoService } from '../_services/endereco.service';
+import { LojaCEPService } from '../_services/loja-cep.service';
+import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-shopping-cart',
@@ -16,43 +16,45 @@ import { EnderecoService } from '../_services/endereco.service';
 
 export class ShoppingCartComponent implements OnInit {
 
-    public productDTO;
+    public cep;
     public currentUser;
-    public products = [];
     public shoppingCart: any[] = [];
     public itemCart;
     public totalValue: number;
-    constructor( private storeService: StoreService,
+    form: FormGroup;
+    public submitted = false;
+    constructor( private toastr: ToastrService,
+                 private lojaService: LojaService,
                  private enderecoService: EnderecoService,
-                 private productService: ProductService,
+                 private carrinhoComprasService: CarrinhoComprasService,
                  private authenticationService: AuthenticationService,
+                 private lojacepService: LojaCEPService,
+                 private formBuilder: FormBuilder,
                  private router: Router) {
     }
 
     ngOnInit() {
-     this.productDTO = this.storeService.loadStoreSelected();
-     if (this.productDTO === null) {
+     this.cep = this.lojaService.loadStoreSelected();
+     if (this.cep === null) {
             return this.router.navigate(['/index']);
             }
-     this.shoppingCart = this.productService.loadCart();
-     if ((this.shoppingCart !== null) && (!this.shoppingCart.find(x => x.lojaId === this.productDTO.store.id))) {
+     this.shoppingCart = this.carrinhoComprasService.loadCart();
+     if ((this.shoppingCart !== null) && (!this.shoppingCart.find(x => x.lojaId === this.cep.loja.id))) {
                 this.shoppingCart = [];
             }
-     this.currentUser = this.authenticationService.loadUser();
-
+     this.currentUser = this.authenticationService.getCurrentUser();
+     this.form = this.formBuilder.group({
+        valueMinimum: ['']
+    });
     }
 
-    getImage(item) {
-        return environment.urlImagesProducts + this.productDTO.produtos.find(x => x.id === item.produtoId).nomeImagem;
-        }
+    getImage(nomeImage) {
+        return environment.urlImagesProducts + nomeImage;
+    }
 
     getCepSelected() {
-        return this.productDTO.store.cep;
+        return this.cep.cep;
     }
-
-    getDescription(item) {
-            return this.productDTO.produtos.find(x => x.id === item.produtoId).descricao;
-            }
 
     getQuantityItems() {
         if (this.shoppingCart !== null) {
@@ -72,20 +74,25 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     getValueMinimum() {
-       return this.productDTO.store.valorMinimoProduto;
+       return this.cep.loja.valorMinimoProduto;
     }
 
    getTax() {
-    return this.productDTO.store.valorTaxaEntrega;
+    return this.cep.valorFrete;
     }
 
     clearCart() {
-        this.productService.clearCart();
-        return this.router.navigate(['/storecategoryproduct']);
+        this.carrinhoComprasService.clearCart();
+        return this.router.navigate(['/store-category-product']);
     }
 
     finishCart() {
-        if ((this.currentUser) && (this.enderecoService.load())) {
+        if (this.checkFinishCart()) {
+            this.submitted = true;
+            return this.form.controls.valueMinimum.setErrors({incorrect: true})
+        }
+
+        if (this.currentUser) {
             return this.router.navigate(['/checkout']);
         }
 
@@ -93,10 +100,16 @@ export class ShoppingCartComponent implements OnInit {
             return this.router.navigate(['/login/1']);
         }
 
-        if ((this.currentUser) && (!this.enderecoService.load())) {
-            return this.router.navigate(['/address/1']);
-        }
+        // if ((this.currentUser) && (!this.enderecoService.load())) {
+        //     return this.router.navigate(['/address/1']);
+        // }
+    }
 
+    checkFinishCart() {
+        if (this.cep.loja.valorMinimoProduto < (this.getTotalItems() + this.getTax())) {
+            return false;
+        }
+        return true;
     }
 
     getSubtotal(item) {
@@ -108,24 +121,24 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     deleteItemCart(item) {
-        this.productService.removeCartProduct(item);
-        this.shoppingCart = this.productService.loadCart();
+        this.carrinhoComprasService.removeCartProduct(item);
+        this.shoppingCart = this.carrinhoComprasService.loadCart();
     }
 
     incrementItemCart(item) {
                 item.quantidade = item.quantidade + 1;
-                this.productService.updateCart(this.shoppingCart);
-                this.shoppingCart = this.productService.loadCart();
+                this.carrinhoComprasService.updateCart(this.shoppingCart);
+                this.shoppingCart = this.carrinhoComprasService.loadCart();
     }
 
     decrementItemCart(item) {
         item.quantidade = item.quantidade - 1;
         if (item.quantidade === 0) {
             this.deleteItemCart(item);
-            return this.shoppingCart = this.productService.loadCart();
+            return this.shoppingCart = this.carrinhoComprasService.loadCart();
         }
-        this.productService.updateCart(this.shoppingCart);
-        this.shoppingCart = this.productService.loadCart();
+        this.carrinhoComprasService.updateCart(this.shoppingCart);
+        this.shoppingCart = this.carrinhoComprasService.loadCart();
 }
 
 

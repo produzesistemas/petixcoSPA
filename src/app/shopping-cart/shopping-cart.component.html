@@ -1,21 +1,19 @@
-<div class="container-xl">
-    <h3>Meu carrinho</h3>
+<div class="container-xl py-5">
+    <h5>Meu carrinho</h5>
     <div class="row">
-        <div class="col-8">
+        <div class="col">
             <table class="table table-hover">
                 <tr *ngFor="let item of shoppingCart">
                     <div class="card">
                         <td>
                             <div class="row">
                                 <div class="col-auto">
-                                    <img class="img-thumbnail" src={{getImage(item)}} alt="Produto">
+                                    <img class="img-fluid" src={{getImage(item.nomeImagem)}} alt="Produto">
                                 </div>
                                 <div class="col">
-                                    <div>{{getDescription(item)}}</div>
+                                    <div>{{ item. descricao}}</div>
                                     <div>{{ item.valor | currency:'R$'}}</div>
                                     <div> Subtotal: {{ getSubtotal(item) | currency:'R$' }}</div>
-                                </div>
-                                <div class="col-auto">
                                     <button type="button" class="btn btn-light" (click)="deleteItemCart(item)">
                                         <i class="fa fa-trash"></i>
                                     </button>
@@ -32,78 +30,64 @@
                     </div>
                 </tr>
             </table>
+
         </div>
-
-        <div class="col-4">
-                
-            <div class="row">
-                <div class="card">
-                    <div class="card-body">
-                            <h3 class="text-center">Resumo do pedido</h3>
-                            <hr>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>Total de itens no carrinho: </h5>
-                            </div>
-                            <div>
-                                {{getQuantityItems()}}
-                            </div>
+        <div class="col">
+            <div class="card">
+                <h5 class="card-header">Resumo do Pedido</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="card-title">Quantidade de itens no carrinho: </h6>
+                            {{getQuantityItems()}}
                         </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>Valor mínimo para compra:</h5>
-                            </div>
-                            <div class="col">
-                                {{getValueMinimum() | currency:'R$'}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>CEP informado: </h5>
-                            </div>
-                            <div class="col">
-                                {{getCepSelected()}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>Taxa de entrega:</h5>
-                            </div>
-                            <div class="col">
-                                {{getTax() | currency:'R$'}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>Valor total carrinho: </h5>
-                            </div>
-                            <div class="col">
-                                {{getTotalItems() | currency:'R$'}}
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5>Valor total pedido:</h5>
-                            </div>
-                            <div class="col">
+                        <div class="col">
+                            <h6 class="card-title">Valor mínimo para compra:</h6>
+                            {{getValueMinimum() | currency:'R$'}}
+                        </div> 
+                        <div class="col">
+                            <h6 class="card-title">CEP informado: </h6>
+                            {{getCepSelected()}}
+                        </div>  
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                           <h6 class="card-title">Taxa de entrega:</h6>
+                            {{getTax() | currency:'R$'}}
+                        </div>  
+                        <div class="col">
+                            <h6 class="card-title">Valor total carrinho: </h6>
+                            {{getTotalItems() | currency:'R$'}}
+                        </div>  
+                        <div class="col">
+                            <form [formGroup]='form'>
+                                <h6 class="card-title">Valor total pedido:</h6>
                                 {{getTotalItems() + getTax() | currency:'R$'}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto mx-auto">
-                                <button type="button" class="btn btn-lg btn-primary btn-block text-uppercase" (click)="clearCart()">
-                                    <i class="fa fa-trash"></i> Limpar carrinho
-                                </button>
-                                <button type="button" class="btn btn-lg btn-primary btn-block text-uppercase" (click)="finishCart()">
-                                    <i class="fa fa-check"></i> Finalizar compra
-                                </button>
-                            </div>
-                        </div>
+                                <div *ngIf="submitted && form.controls.valueMinimum.errors">
+                                    <p class="text-left text-danger small">* Valor minimo para compra é de
+                                        {{ cep.loja.valorMinimoProduto | currency:'R$'}}</p>
+                                </div>
+                            </form>
+    
+                        </div>    
+    
                     </div>
                 </div>
             </div>
+            <div class="text-center py-3">
+                <button type="button" class="btn btn-outline-danger text-uppercase"
+                    (click)="clearCart()">
+                    <i class="fa fa-trash"></i> Limpar carrinho
+                </button>
+                <button type="button" class="btn btn-outline-danger text-uppercase ml-2"
+                    (click)="finishCart()">
+                    <i class="fa fa-check"></i> Finalizar pedido
+                </button>
+            </div>
 
         </div>
-
     </div>
+
+
+

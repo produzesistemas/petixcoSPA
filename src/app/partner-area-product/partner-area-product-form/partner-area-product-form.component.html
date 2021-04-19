@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h5 class="card-title text-center">Cadastro de Produto</h5>
+
+
+          <form [formGroup]='form'>
+            <div class="form-group">
+              <label>Foto:</label>
+              <img *ngIf="logo" class="img-thumbnail" src={{logo}}>
+              <input type="file" name="fileUpload" (change)="onFileChange($event)" class="form-control"
+                formControlName="file" />
+            </div>
+            <div *ngIf="submitted && f.file.errors">
+              <p *ngIf="f.file.errors.required" class="text-danger small">* Selecione a foto do produto</p>
+            </div>
+            <div class="form-group">
+              <label>Categoria:</label>
+              <select class="form-control" formControlName="subCategoriaId">
+                <option [value]="categoria.value" *ngFor="let categoria of lstCategorias">{{categoria.label}}</option>
+              </select>
+            </div>
+            <div *ngIf="submitted && f.subCategoriaId.errors">
+              <p *ngIf="f.subCategoriaId.errors.required" class="text-danger small">* Selecione a categoria</p>
+            </div>
+            <div class="form-group">
+              <label>Descrição:</label>
+              <input type="text" formControlName="descricao" placeholder="Informe a descrição..." class="form-control">
+            </div>
+            <div *ngIf="submitted && f.descricao.errors">
+              <p *ngIf="f.descricao.errors.required" class="text-danger small">* Informe a descrição</p>
+            </div>
+            <div class="form-group">
+              <label>Detalhes:</label>
+              <input type="text" formControlName="detalhe" placeholder="Informe os detalhes..." class="form-control">
+            </div>
+            <div *ngIf="submitted && f.detalhe.errors">
+              <p *ngIf="f.detalhe.errors.required" class="text-danger small">* Informe os detalhes</p>
+            </div>
+
+            <div class="form-group">
+              <label>Valor:</label>
+              <input currencyMask max="99999999"
+                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                maxlength="18" type="text" formControlName="valor" placeholder="Informe o valor..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.valor.errors">
+              <p *ngIf="f.valor.errors.required" class="text-danger small">* Informe um valor</p>
+            </div>
+
+            <div class="form-group">
+              <label>Promoção?: </label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" (change)="handleChange($event)" name="promocao"
+                  id="promocaoYes" value="true" formControlName="promocao">
+                <label class="form-check-label" for="promocaoYes">Sim</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" (change)="handleChange($event)" name="promocao"
+                  id="promocaoNo" value="false" formControlName="promocao">
+                <label class="form-check-label" for="promocaoNo">Não</label>
+              </div>
+            </div>
+            <div *ngIf="submitted && f.promocao.errors">
+              <p *ngIf="f.promocao.errors.required" class="text-danger small">* Informe se o produto está em promoção.
+              </p>
+            </div>
+            <div class="form-group" *ngIf="isPromocional">
+              <label>Valor promocional:</label>
+              <input currencyMask max="99999999"
+                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                maxlength="18" type="text" formControlName="valorPromocional"
+                placeholder="Informe o valor promocional..." class="form-control">
+            </div>
+            <div *ngIf="submitted && f.valorPromocional.errors">
+              <p *ngIf="f.valorPromocional.errors.required" class="text-danger small">* Informe o valor promocional.</p>
+            </div>
+
+            <div class="form-group">
+              <label>Destaque?: </label>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="destaque" id="inlineRadio1" value="true"
+                  formControlName="destaque">
+                <label class="form-check-label" for="inlineRadio1">Sim</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="destaque" id="inlineRadio2" value="false"
+                  formControlName="destaque">
+                <label class="form-check-label" for="inlineRadio2">Não</label>
+              </div>
+
+            </div>
+            <div *ngIf="submitted && f.destaque.errors">
+              <p *ngIf="f.destaque.errors.required" class="text-danger small">* Informe se o produto está em destaque.
+              </p>
+            </div>
+
+
+
+          </form>
+          <button class="btn btn-success text-uppercase" (click)="onSave()">
+            <i class="fas fa-save"></i>
+            Salvar</button>
+            <button type="button" class="btn btn-danger ml-2 text-uppercase" (click)="onCancel()">
+              <i class="fa fa-arrow-circle-left"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="py-5">
+        <form [formGroup]="formAdd">
+            <div class="form-group col-md-6">
+                <h5>Cadastro de Região de Entrega</h5>
+            </div>
+            <div class="form-group col-md-6">
+                <label>CEP para entrega:</label>
+                <input type="text" formControlName="cep" placeholder="Informe o cep..." class="form-control" mask="00000-000" required autofocus>
+              </div>
+              <div *ngIf="submitted && f.cep.errors"> 
+                  <p *ngIf="f.cep.errors.required" class="text-danger small">* Campo CEP é obrigatório</p>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Valor da taxa de entrega:</label>
+                    <input currencyMask max="99999999"
+                      [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                      maxlength="18" type="text" formControlName="valorTaxa"
+                      placeholder="Informe o valor da taxa de entrega..." class="form-control">
+                  </div>
+            <div class="form-group col-md-6">
+                <button type="button" class="btn btn-success text-uppercase" (click)="onSave()">
+                    <i class="fa fa-save"></i> Salvar
+                </button>
+                <button type="button" class="btn btn-danger ml-2 text-uppercase" (click)="onCancel()">
+                    <i class="fa fa-arrow-circle-left"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

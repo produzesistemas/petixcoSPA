@@ -1,0 +1,125 @@
+  <div class="container py-5">
+    <h5>Meus pedidos</h5>
+    <div class="row" *ngFor="let item of lst">
+      <div class="col-sm-7 col-md-7 col-lg-7 py-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              Pedido nº: {{ item.id }}
+            </div>
+            <div class="row">
+              Total do Pedido: {{ getTotalPedido(item) | currency:'R$'}}
+            </div>
+            <div class="row">
+              Forma de Pagamento: {{ item.formaPagamento.descricao }}
+            </div>
+            <div class="row">
+              Status do pagamento: {{ getStatusAtual(item) }}
+            </div>
+
+            <div class="row py-3">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                  <button class="btn btn-outline-danger btn-block text-uppercase" (click)="openDetails(modalDetails,item)">
+                    <i class="fas fa-search-location"></i>
+                    Detalhes</button>
+                </div>
+                <div *ngIf='checkPay(item)' class="btn-group mr-2" role="group" aria-label="First group">
+                  <button class="btn btn-outline-danger btn-block text-uppercase" (click)="pay(item)">
+                    <i class="fas fa-credit-card"></i>
+                    Pague agora</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<ng-template #modalDetails>
+  <div class="inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+      <h3 class="modal-title">Detalhes do pedido nº {{ pedido.id }} </h3>
+      <button type="button" class="close" (click)="closeDetails()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          Status do Pagamento: {{ getStatusAtual(pedido) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          Forma de Pagamento: {{ pedido.formaPagamento.descricao }}
+        </div>
+      </div>
+      <hr>
+      <h6>Endereço de entrega</h6>
+      {{ pedido.endereco.descricao }}, {{ pedido.endereco.numero }}, {{ pedido.endereco.bairro }}, {{
+      pedido.endereco.cidade.nome }}, {{ pedido.endereco.cidade.estado.nome }}
+      <hr>
+      <h6>Acompanhamento do Pedido</h6>
+      <div class="row" *ngFor="let pedidoAcompanhamento of pedido.pedidoAcompanhamentos">
+        <div class="col-sm-12 col-md-12 col-lg-12"
+          [ngClass]="{'text-success': getStatusAcompanhamento(pedidoAcompanhamento.statusPagamentoPedido.id)}">
+          {{ pedidoAcompanhamento.statusPagamentoPedido.descricao }} <i class="fa fa-long-arrow-alt-right"></i>
+          <i class="fa fa-check-circle"></i>
+          <span *ngIf="getStatusAcompanhamento(pedidoAcompanhamento.statusPagamentoPedido.id)"> em {{
+            getDataAcompanhamento(pedidoAcompanhamento.statusPagamentoPedido.id) | date:'dd/MM/yyyy'}} ás {{
+            getDataAcompanhamento(pedidoAcompanhamento.statusPagamentoPedido.id) | date:'h:mm'}}</span>
+        </div>
+      </div>
+      <hr>
+      <h6>Produtos</h6>
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-hover">
+            <tr *ngFor="let pedidoProduto of pedido.pedidoProdutos">
+              <div class="card">
+                <td>
+                  <div class="row">
+                    <div class="col-auto">
+                      <img class="img-thumbnail" src={{getImageProduct(pedidoProduto.produto.nomeImagem)}}
+                        alt="Produto">
+                    </div>
+                    <div class="col">
+                      <div>{{ pedidoProduto.produto.descricao}}</div>
+                      <div>Valor unitário: {{ pedidoProduto.valorProduto | currency:'R$'}}</div>
+                      <div>Quantidade: {{ pedidoProduto.qtd }}</div>
+                      <div> Subtotal: {{ getSubtotal(pedidoProduto) | currency:'R$' }}</div>
+                    </div>
+                  </div>
+                </td>
+              </div>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+      <h6>Valor total dos produtos: {{ getTotalItems() | currency:'R$' }}</h6>
+      <h6>Taxa de entrega: {{ pedido.valorTaxa | currency:'R$' }}</h6>
+      <h6>Valor total do pedido: {{ getTotalItems() + pedido.valorTaxa | currency:'R$' }}</h6>
+      <hr>
+      <h6 *ngIf="pedido.paymentId">Dados do pagamento</h6>
+      <div class="row" *ngIf="pedido.paymentId">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          Identificação: {{ payment.Payment.PaymentId }}
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          Valor do Pagamento: {{ payment.Payment.Amount }}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-rounded btn-default text-uppercase" (click)="closeDetails()">
+        <i class="fa fa-times"></i> Fechar
+      </button>
+    </div>
+
+  </div>
+</ng-template>

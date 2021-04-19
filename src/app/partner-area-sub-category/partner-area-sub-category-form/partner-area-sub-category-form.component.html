@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="py-5">
+        <form [formGroup]="formAdd">
+            <div class="form-group col-md-6">
+                <h5>Cadastro de Sub Categoria</h5>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Descrição:</label>
+                <input type="text" formControlName="descricao" placeholder="Informe a descrição..." class="form-control">
+                <div *ngIf="submitted && f.descricao.errors"> 
+                    <p *ngIf="f.descricao.errors.required" class="text-danger small">* Campo Descrição é obrigatório</p>
+                  </div>  
+            </div>
+
+
+                <div class="form-group col-md-6">
+                    <label>Categoria:</label>
+                    <select class="form-control" formControlName="categoria">
+                      <option [ngValue]="categoria" *ngFor="let categoria of categorias">
+                        {{categoria.descricao}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.categoria.errors">
+                      <p *ngIf="f.categoria.errors.required" class="text-danger small">* Seleção de Categoria é
+                        obrigatória</p>
+                    </div>
+                  </div>
+
+
+            <div class="form-group col-md-6">
+                <button type="button" class="btn btn-success text-uppercase" (click)="onSave()">
+                    <i class="fa fa-save"></i> Salvar
+                </button>
+                <button type="button" class="btn btn-danger ml-2 text-uppercase" (click)="onCancel()">
+                    <i class="fa fa-arrow-circle-left"></i> Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

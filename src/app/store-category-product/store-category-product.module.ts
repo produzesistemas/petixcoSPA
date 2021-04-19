@@ -4,14 +4,17 @@ import { SharedModule } from '../share.module';
 import { StoreCategoryProductRoutingModule} from './store-category-product-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
 
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
     imports: [
         SharedModule,
         CommonModule,
         StoreCategoryProductRoutingModule,
-        NgbModule
+        NgbModule,
+        NgxMaskModule.forRoot(options),
       ],
     declarations: [
         StoreCategoryProductComponent

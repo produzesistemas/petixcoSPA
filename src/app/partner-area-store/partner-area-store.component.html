@@ -1,0 +1,147 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h5 class="card-title text-center">Configurações gerais</h5>
+          <div>
+            <img *ngIf="logo" class="img-thumbnail" src={{logo}} width="50%" height="50%">
+          </div>
+          <div class="form-group">
+            <input type="file" class="form-control-file" name="fileUpload" (change)="onFileChange($event)" />
+          </div>
+          <form [formGroup]='form'>
+            <hr>
+            <h6 class="col-lg-6">Dados gerais</h6>
+            <div class="form-group col-lg-12">
+              <label>Nome:</label>
+              <input type="text" maxlength="255" formControlName="nome" placeholder="Informe o nome..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.nome.errors">
+              <p *ngIf="f.nome.errors.required" class="text-danger small">* Informe o nome</p>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label>Descrição:</label>
+              <textarea maxlength="1000" formControlName="descricao" placeholder="Informe a descrição..."
+                class="form-control" rows="3"></textarea>
+            </div>
+            <div *ngIf="submitted && f.descricao.errors">
+              <p *ngIf="f.descricao.errors.required" class="text-danger small">* Informe a descrição</p>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>CNPJ:</label>
+              <input type="text" formControlName="cnpj" placeholder="Informe o CNPJ..." class="form-control"
+                mask="00.000.000/0000-00" maxlength='18'>
+            </div>
+            <div *ngIf="submitted && f.cnpj.errors">
+              <p class="text-danger small" *ngIf="f.cnpj.errors.required">* Informe o CNPJ</p>
+            </div>
+            <div class="form-group col-lg-12">
+              <label>Nome do Contato Responsável pela Loja:</label>
+              <input type="text" formControlName="contato" placeholder="Informe o nome do contato..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.contato.errors">
+              <p *ngIf="f.contato.errors.required" class="text-danger small">* Informe o nome do contato</p>
+            </div>
+
+            <div class="form-group col-lg-6">
+              <label>Telefone do Contato Responsável pela Loja:</label>
+              <input type="text" formControlName="telefone" placeholder="Informe o telefone de contato..."
+                class="form-control" mask="(00)00000-0000">
+            </div>
+            <div *ngIf="submitted && f.telefone.errors">
+              <p *ngIf="f.telefone.errors.required" class="text-danger small">* Informe o telefone de contato</p>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label>Política de Troca:</label>
+              <textarea formControlName="politicaTroca" placeholder="Informe a política de troca..."
+                class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label>Política de Entrega:</label>
+              <textarea formControlName="politicaEntrega" placeholder="Informe a política de entrega..."
+                class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group col-lg-12">
+              <label>Quem somos:</label>
+              <textarea formControlName="quemSomos" placeholder="Quem somos..."
+                class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group col-lg-6">
+              <label>Valor mínimo para compra de Produtos:</label>
+              <input currencyMask max="99999999"
+                [options]="{ prefix: '', thousands: '.', decimal: ',', precision: 2, allowNegative: false }"
+                maxlength="18" type="text" formControlName="valorMinimoProduto"
+                placeholder="Informe o valor mínimo de compra..." class="form-control">
+            </div>
+            <hr>
+            <h6 class="col-lg-12">Endereço do Centro de Distribuição</h6>
+            <div class="form-group col-lg-6">
+              <label>Cep:</label>
+              <div class="input-group mb-3">
+
+                <input type="text" mask="00000-000" maxlength="9" formControlName="cep" placeholder="Informe o CEP..."
+                  class="form-control">
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" type="button" id="button-addon2" (click)="onSearchLocation()">
+                    <i class="fas fa-search-location"></i>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="submitted && f.cep.errors">
+                <p *ngIf="f.cep.errors.required" class="text-danger small">* Informe o CEP</p>
+              </div>
+            </div>
+            <div class="form-group col-lg-12">
+              <label>Logradouro:</label>
+              <input type="text" maxlength="500" formControlName="logradouro" placeholder="Informe o logradouro..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.logradouro.errors">
+              <p *ngIf="f.logradouro.errors.required" class="text-danger small">* Informe o logradouro</p>
+            </div>
+            <div class="form-group col-lg-6">
+              <label>Numero:</label>
+              <input type="text" maxlength="255" formControlName="numero" placeholder="Informe o numero..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.numero.errors">
+              <p *ngIf="f.numero.errors.required" class="text-danger small">* Informe o número</p>
+            </div>
+
+            <div class="form-group col-lg-6">
+              <label>Bairro:</label>
+              <input type="text" maxlength="255" formControlName="bairro" placeholder="Informe o bairro..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.bairro.errors">
+              <p *ngIf="f.bairro.errors.required" class="text-danger small">* Informe o bairro</p>
+            </div>
+
+            <div class="form-group col-lg-6">
+              <label>Cidade:</label>
+              <input type="text" maxlength="255" formControlName="nomeCidade" placeholder="Informe a Cidade..."
+                class="form-control">
+            </div>
+            <div *ngIf="submitted && f.nomeCidade.errors">
+              <p *ngIf="f.nomeCidade.errors.required" class="text-danger small">* Informe a Cidade</p>
+            </div>
+
+          </form>
+          <div class="form-group col-lg-6">
+            <button class="btn btn-lg btn-outline-danger text-uppercase" (click)="onSubmit()">
+              <i class="fas fa-save"></i>
+              Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

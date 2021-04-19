@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -27,8 +27,30 @@ export class GenericHttpService<T> {
     return this.httpService.post<T>(`${environment.urlApi}` + url, body);
   }
 
+  public sendCielo(body: any): Observable<T> {
+    return this.httpService.post<T>(`${environment.urlSandboxRequisicaoCielo}`, body, {
+      params: new HttpParams().set(
+        'Cielo',
+        'true'
+      )
+    });
+  }
+
+  public getCielo(id: any): Observable<T> {
+    return this.httpService.get<T>(`${environment.urlSandboxConsultaCielo}` + `{` + `${id}` + `}`, {
+      params: new HttpParams().set(
+        'Cielo',
+        'true'
+      )
+    });
+  }
+
   public postAll(url: string, body: any): Observable<T[]> {
     return this.httpService.post<T[]>(`${environment.urlApi}` + url, body);
+  }
+
+  public delete(url: string): Observable<T> {
+    return this.httpService.delete<any>(`${environment.urlApi}` + url);
   }
 
   protected getHeaders(json?: boolean) {

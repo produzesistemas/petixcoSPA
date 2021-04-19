@@ -3,67 +3,63 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Token } from '../_model/token';
 import { GenericHttpService } from './genericHttpService';
+import { ApplicationUser } from 'src/app/_model/application-user';
+import { LoginUser } from '../_model/login-user-model';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService extends GenericHttpService<Token>{
+export class AuthenticationService extends GenericHttpService<any>{
     protected baseUrl = `${environment.urlApi}`;
     protected baseSite = `${environment.urlApi}`;
-    private currentUserSubject: BehaviorSubject<Token>;
-    public currentUser: Observable<Token>;
+    // private currentUserSubject: BehaviorSubject<any>;
+    public currentUser: BehaviorSubject<any>;
 
     constructor(private http: HttpClient) {
         super(http);
-        this.currentUserSubject = new BehaviorSubject<Token>(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable();
+        this.currentUser = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('petixco_user')));
+        // this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): Token {
-          return this.currentUserSubject.value;
+    registerPartner(user: ApplicationUser) {
+        return this.postAll('account/registerPartner', user);
     }
 
-private TokenApi = 'http://localhost:51296/api/token';
+    registerMaster(user: LoginUser) {
+        return this.postAll('account/registerMaster', user);
+    }
 
-login(UserName: string, Password: string, TypeUser: string): Observable<any> {
-    const data = 'grant_type=password&username=' + UserName + '&password=' + Password + '&type_user=' + TypeUser;
-    return this.http.post(this.TokenApi, data, { headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded') })
-    .pipe(map(user => {
-        if (user) {
-           localStorage.setItem('petixco_user', JSON.stringify(user));
-                  }
-        return user;
-    }));
-}
+    registerClient(user: ApplicationUser) {
+        return this.postAll('account/registerClient', user);
+    }
 
     logout() {
         localStorage.removeItem('petixco_user');
-        this.currentUserSubject.next(null);
+        localStorage.removeItem('petixco_user_google');
+        this.currentUser.next(null);
     }
 
-    recovery(user: Token) {
-        let url: string;
-        url = `${this.baseSite}`;
-        const formData = new FormData();
-        formData.append('user', JSON.stringify(user));
-        formData.append('url', url);
-        return this.http.post<any>(`${this.baseUrl}/recoveryPassword/`, formData);
+    addCurrenUser(user) {
+        localStorage.setItem('petixco_user', JSON.stringify(user));
     }
 
-    verifyCode(data) {
-        return this.http.post<Token>(`${this.baseUrl}/verifyCode/`, data);
+    clearUser() {
+        localStorage.removeItem('petixco_user');
     }
 
-    changePassword(user: Token) {
-        return this.http.post(`${this.baseUrl}/changePassword/`, user);
-    }
+    // getByToken() {
+    //     return this.get('account');
+    // }
 
-    newPassword(data) {
-        return this.http.post(`${this.baseUrl}/newPassword/`, data);
-    }
-
-    loadUser() {
+    getCurrentUser() {
         return new BehaviorSubject<any>(JSON.parse(localStorage.getItem('petixco_user'))).getValue();
+    }
+
+    save(store: FormData) {
+        return this.post('account/save', store);
+    }
+
+    login(user) {
+        return this.postAll('account/login', user);
     }
 
 }

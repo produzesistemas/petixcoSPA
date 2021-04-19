@@ -5,12 +5,13 @@
 export const environment = {
   production: false,
   version: '1.0.0 dev',
-  // urlApi: 'http://localhost:51296/api/',
-  urlApi: 'http://localhost:64619/api/',
-  // urlApi: 'http://produzesistemas.com.br/api/',
-  urlImagesLojas: 'http://produzesistemas.com.br/Content/imageslojas/',
-  // urlImagesLojas: 'http://localhost:51296/Content/imageslojas/',
-  urlImagesProducts: 'http://produzesistemas.com.br/Content/imagesprodutos/',
+  urlApi: 'https://localhost:44362/api/',
+  urlImagesLojas: 'https://localhost:44362/Files/Store/',
+  urlImagesProducts: 'https://localhost:44362/Files/Product/',
+  urlSandboxRequisicaoCielo: 'https://apisandbox.cieloecommerce.cielo.com.br/1/sales/',
+  urlSandboxConsultaCielo: 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/',
+  merchantId: 'cd516613-3c14-43ee-9f4b-8c4287e4dd19',
+  merchantKey: 'DTBHFVOPAVILETWYGJIYKEUAUDNPRMPXTJTYVCNJ',
 };
 
 /*

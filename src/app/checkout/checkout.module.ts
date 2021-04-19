@@ -4,6 +4,7 @@ import { SharedModule } from '../share.module';
 import { CheckoutRoutingModule} from './checkout-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxViacepModule } from '@brunoc/ngx-viacep';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         SharedModule,
         CommonModule,
         CheckoutRoutingModule,
-        NgbModule
+        NgbModule,
+        NgxViacepModule
       ],
     declarations: [
         CheckoutComponent

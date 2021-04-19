@@ -1,63 +1,199 @@
-<div class="container">
-
-  <img class="img-thumbnail" src={{getImageStore(productDTO.store.nomeImagem)}} alt="Pet-shop">
-
-
-  <button type="button" class="btn btn-primary" (click)="openShoppingCart()">
-    <i class="fa fa-shopping-cart"></i>
-    <span class="badge badge-light">{{getQuantityItems()}}</span>
-  </button>
-</div>
-
-
-
-<nav class="navbar navbar-expand-md navbar-light bg-light">
-  <button class="navbar-toggler" type="button" aria-controls="navbarContent" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <div class="navbar-collapse" id="navbarContent">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
-      <li class="nav-item dropdown" ngbDropdown *ngFor="let categoria of productDTO.categorias">
-        <a class="nav-link dropdown-toggle" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+      <li class="nav-item dropdown" *ngFor="let categoria of categorias">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           {{ categoria.descricao }}
         </a>
-        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu" *ngFor="let subcategoria of categoria.subcategorias">
-          <button ngbDropdownItem *ngFor="let subcategoria of categoria.subcategorias" class="dropdown-item" (click)="filterSubCategory(subcategoria)">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <button class="dropdown-item" (click)="filterSubCategory(subcategoria)"
+            *ngFor="let subcategoria of categoria.subcategorias">
             {{ subcategoria.descricao }}
           </button>
         </div>
       </li>
     </ul>
   </div>
+  <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar na loja" aria-label="Pesquisar na loja">
+    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+    <button type="button" class="btn btn-light" (click)="openShoppingCart()">
+      <div class="badge badge-pill badge-danger">
+        <i class="fa fa-shopping-cart"></i>{{ getQuantityItems() }}
+      </div>
+    </button>
+  </form>
 </nav>
 
+<div class="text-center">
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="../../../assets/bgFrigomms1.png" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src=".../../../assets/bgFrigomms2.png" class="d-block w-100" alt="...">
+      </div>
+    </div>
+  </div>
+</div>
 
-<div class="container">
-  <h3>Ofertas e destaques</h3>
-  <div class="card-deck mb-3 text-center">
-    <div *ngFor="let produto of products">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-          <img class="img-thumbnail" src={{getImage(produto.nomeImagem)}} alt="Pet-shop encontrado">
+<div class="py-5 bg-light">
+  <div class="container" *ngIf="!isFilter()">
+    <div *ngFor="let categoria of categorias">
+      <h6 class="py-3 text-center">{{ categoria.descricao }}</h6>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#blogCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#blogCarousel" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+  
+              <div class="carousel-item active">
+  
+                <div class="form-inline justify-content-center">
+                  <div *ngFor="let produto of categoria.produtos; let ind = index;">
+  
+                    <div class="card mb-3 shadow-sm ml-2" *ngIf="ind < 4">
+                      <div class="card-body text-center">
+                        <img class="img-fluid" src={{getImage(produto.nomeImagem)}} alt="Image">
+                      </div>
+                      <div class="card-header">
+                        {{ produto.descricao }}
+                        <div class="card-title pricing-card-title">
+                          {{ produto.valor | currency:'R$'}}
+                        </div>
+                        <button class="btn btn-lg btn-outline-danger btn-block text-uppercase"
+                          (click)="addShoppingCart(produto)">
+                          <i class="fa fa-shopping-cart"></i>
+                          Comprar</button>
+                      </div>
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+  
+              <div class="carousel-item">
+                <div class="form-inline justify-content-center">
+                  <div *ngFor="let produto of categoria.produtos; let ind = index;">
+                    <div class="card mb-3 shadow-sm ml-2">
+                      <div class="card-body text-center">
+                        <img src={{getImage(produto.nomeImagem)}} alt="Image">
+                      </div>
+                      <div class="card-header">
+  
+                        {{ produto.descricao }}
+                        <div class="card-title pricing-card-title">
+                          {{ produto.valor | currency:'R$'}}
+                        </div>
+                        <button class="btn btn-lg btn-outline-danger text-uppercase" (click)="addShoppingCart(produto)">
+                          <i class="fa fa-shopping-cart"></i>
+                          Comprar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  
+  </div>
+  
+</div>
+<div class="container py-5" *ngIf="isFilter()">
+  <h6 class="py-3">{{ title }}</h6>
+  <div class="row">
+    <div *ngFor="let produto of produtos">
+      <div class="card mb-3 shadow-sm ml-2" style="width: 18rem;">
+        <div class="card-body text-center">
+          <img class="img-fluid" src={{getImage(produto.nomeImagem)}} alt="Image">
         </div>
         <div class="card-header">
           {{ produto.descricao }}
           <div class="card-title pricing-card-title">
             {{ produto.valor | currency:'R$'}}
           </div>
-          <button class="btn btn-lg btn-primary btn-block text-uppercase" (click)="addShoppingCart(produto)">Comprar</button>
+          <button class="btn btn-lg btn-outline-danger btn-block text-uppercase" (click)="addShoppingCart(produto)">
+            <i class="fa fa-shopping-cart"></i>
+            Comprar</button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
 
-<footer class="bd-footer text-muted">
+
+<footer class="bd-footer text-muted bg-danger">
   <div class="container-fluid p-3 p-md-5">
     <ul class="bd-footer-links">
-      <li>About</li>
+      <li> <a class="text-white" href="partner-area-quem-somos">
+          Quem somos
+        </a></li>
+      <li> <a class="text-white" href="partner-area-exchange-policy">
+          Política de troca
+        </a></li>
+      <li> <a class="text-white" href="partner-area-delivery-policy">
+          Política de entrega
+        </a></li>
+        <li> <a class="text-white" href="partner-area-login">
+          Área administrativa
+        </a></li>
     </ul>
+    <div class="h4 text-center text-white">
+      <!-- <h6>{{ lojaCep.loja.nome }}</h6> -->
+      <h6>
+        <i class="fas fa-phone"></i>
+         <!-- {{ lojaCep.loja.telefone | mask: '(00) 0000-0000' }} -->
+      </h6>
+      <!-- <h6>{{ lojaCep.loja.logradouro }}, {{ lojaCep.loja.bairro }}, {{ lojaCep.loja.numero }}, {{ lojaCep.loja.cep }},
+        {{ lojaCep.loja.nomeCidade }}, {{ lojaCep.loja.cidade.estado.nome }} - CNPJ: {{ lojaCep.loja.cnpj | mask:
+        '00.000.000.0000/99' }}</h6> -->
+
+    </div>
+    <div class="row">
+      <div class="form-inline">
+        <a href="" class="nav-link text-white">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="" class="nav-link text-white">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="" class="nav-link text-white">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+    </div>
+    <div class="row text-center"></div>
+    <h6 class="text-white">Formas de pagamento</h6>
+    <div class="form-inline">
+      <img src="../../assets/mcard.png">
+      <img src="../../assets/visa.png">
+      <img src="../../assets/valecard.png">
+      <img src="../../assets/ticket.png">
+      <img src="../../assets/sodexo.png">
+      <img src="../../assets/vr.png">
+      <img src="../../assets/alelo.png">
+      <img src="../../assets/american.png">
+      <img src="../../assets/diners.png">
+    </div>
   </div>
 </footer>
